@@ -65,6 +65,8 @@
           <th>Fecha Actual</th>
           <th>Fecha Cita</th>
           <th>Costo</th>
+          <th>Descuento</th>
+<th>Total</th>
         </tr>
       </thead>
       <tbody id="tabla"></tbody>
@@ -74,22 +76,47 @@
   </div>
 
   <script>
-    function buscar() {
-      const fecha = document.getElementById("buscar").value;
-      const registros = JSON.parse(localStorage.getItem("registros")) || [];
-      const filtrados = registros.filter(r => r.fechaCita === fecha);
-      const tabla = document.getElementById("tabla");
-      tabla.innerHTML = "";
-      filtrados.forEach(p => {
-        tabla.innerHTML += `<tr>
-          <td>${p.nombre}</td>
-          <td>${p.edad}</td>
-          <td>${p.fechaActual}</td>
-          <td>${p.fechaCita}</td>
-          <td>${p.costo}</td>
-        </tr>`;
-      });
-    }
+   function buscar() {
+  const fecha = document.getElementById("buscar").value;
+  const registros = JSON.parse(localStorage.getItem("registros")) || [];
+
+  // Extraer mes y año de la búsqueda
+  const [anioBuscado, mesBuscado] = fecha.split("-");
+
+  const filtrados = registros.filter(r => r.fechaCita === fecha);
+  const tabla = document.getElementById("tabla");
+  tabla.innerHTML = "";
+
+  filtrados.forEach(p => {
+    // Contar citas del mes del paciente
+    const citasMismoMes = registros.filter(r => {
+      const [anio, mes] = r.fechaCita.split("-");
+      return mes === mesBuscado && anio === anioBuscado && r.nombre === p.nombre;
+    }).length;
+
+    // Calcular descuento
+    let descuento = 0;
+    if (citasMismoMes === 2) descuento = 0.10;
+    else if (citasMismoMes >= 3) descuento = 0.20;
+
+    const costoBase = 500;
+    const descuentoPesos = costoBase * descuento;
+    const total = costoBase - descuentoPesos;
+
+    tabla.innerHTML += `
+      <tr>
+        <td>${p.nombre}</td>
+        <td>${p.edad}</td>
+        <td>${p.fechaActual}</td>
+        <td>${p.fechaCita}</td>
+        <td>$${costoBase}</td>
+        <td>${descuento * 100}%</td>
+        <td>$${total.toFixed(2)}</td>
+      </tr>
+    `;
+  });
+}
+
   </script>
 </body>
 </html>
