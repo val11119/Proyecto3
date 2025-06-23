@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Registro de pacientes</title>
+  <style>
+    body {
+      background: #e6f0fa;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      max-width: 600px;
+      width: 100%;
+    }
+    h2 {
+      text-align: center;
+      color: #0f62fe;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-top: 12px;
+      font-weight: bold;
+    }
+    input[type="text"],
+    input[type="number"],
+    input[type="date"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    .radio-group {
+      display: flex;
+      gap: 20px;
+      margin-top: 5px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      background: #0f62fe;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #094eb6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Registro de Paciente</h2>
+    <label>Nombre:</label>
+    <input type="text" id="nombre">
+    <label>Apellidos:</label>
+    <input type="text" id="apellidos">
+    <label>Edad:</label>
+    <input type="number" id="edad">
+    <label>¿Enfermedades crónicas?</label>
+    <div class="radio-group">
+      <label><input type="radio" name="cronicas" value="Sí"> Sí</label>
+      <label><input type="radio" name="cronicas" value="No" checked> No</label>
+    </div>
+    <label>¿Cuáles?:</label>
+    <input type="text" id="enfermedades">
+    <label>Fecha actual:</label>
+    <input type="date" id="fecha-actual">
+    <label>Fecha de cita:</label>
+    <input type="date" id="fecha-cita">
+    <button onclick="guardar()">Guardar registro</button>
+    <button onclick="window.location.href='tabla.html'">📋 Ver tabla de pacientes</button>
+    <button onclick="window.location.href='login.html'">🔙 Cerrar sesión</button>
+  </div>
+
+  <script>
+    function guardar() {
+      const registro = {
+        nombre: document.getElementById("nombre").value + " " + document.getElementById("apellidos").value,
+        edad: document.getElementById("edad").value,
+        cronicas: document.querySelector('input[name="cronicas"]:checked').value,
+        enfermedades: document.getElementById("enfermedades").value,
+        fechaActual: document.getElementById("fecha-actual").value,
+        fechaCita: document.getElementById("fecha-cita").value,
+        costo: "$500"
+      };
+
+      let registros = JSON.parse(localStorage.getItem("registros")) || [];
+      registros.push(registro);
+      localStorage.setItem("registros", JSON.stringify(registros));
+      localStorage.setItem("ticket", JSON.stringify(registro));
+      alert("Registro guardado exitosamente");
+      window.location.href = "ticket.html";
+    }
+  </script>
+</body>
+</html>

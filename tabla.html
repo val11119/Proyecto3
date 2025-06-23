@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Tabla de registros</title>
+  <style>
+    body {
+      background: #e6f0fa;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 40px;
+      text-align: center;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      max-width: 900px;
+      margin: auto;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #0f62fe;
+      margin-bottom: 20px;
+    }
+    input, button {
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #0f62fe;
+      color: white;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      margin: 10px;
+    }
+    button:hover {
+      background: #094eb6;
+    }
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #aaa;
+      padding: 10px;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Tabla de Pacientes</h2>
+    <label>Buscar por fecha de cita:</label>
+    <input type="date" id="buscar">
+    <button onclick="buscar()">Buscar</button>
+    <table>
+      <thead>
+        <tr>
+          <th>Paciente</th>
+          <th>Edad</th>
+          <th>Fecha Actual</th>
+          <th>Fecha Cita</th>
+          <th>Costo</th>
+        </tr>
+      </thead>
+      <tbody id="tabla"></tbody>
+    </table>
+    <button onclick="window.location.href='registro.html'">← Volver al registro</button>
+    <button onclick="window.location.href='login.html'">🔙 Cerrar sesión</button>
+  </div>
+
+  <script>
+    function buscar() {
+      const fecha = document.getElementById("buscar").value;
+      const registros = JSON.parse(localStorage.getItem("registros")) || [];
+      const filtrados = registros.filter(r => r.fechaCita === fecha);
+      const tabla = document.getElementById("tabla");
+      tabla.innerHTML = "";
+      filtrados.forEach(p => {
+        tabla.innerHTML += `<tr>
+          <td>${p.nombre}</td>
+          <td>${p.edad}</td>
+          <td>${p.fechaActual}</td>
+          <td>${p.fechaCita}</td>
+          <td>${p.costo}</td>
+        </tr>`;
+      });
+    }
+  </script>
+</body>
+</html>

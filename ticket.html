@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Ticket de Cita Médica</title>
+  <style>
+    body {
+      font-family: monospace;
+      background: #f9f9f9;
+      color: #000;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+    .ticket {
+      width: 300px;
+      background: white;
+      padding: 20px;
+      border: 1px dashed #000;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .ticket h2 {
+      text-align: center;
+      margin: 0 0 10px 0;
+      font-size: 18px;
+    }
+    .ticket p {
+      margin: 5px 0;
+    }
+    .line {
+      border-top: 1px dashed #000;
+      margin: 10px 0;
+    }
+    .btn-print {
+      margin-top: 15px;
+      padding: 10px;
+      width: 100%;
+      background: #0f62fe;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    @media print {
+      .btn-print {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="ticket" id="ticket">
+    <h2>Clínica Médica</h2>
+    <div class="line"></div>
+    <p><strong>Paciente:</strong> <span id="paciente"></span></p>
+    <p><strong>Edad:</strong> <span id="edad"></span></p>
+    <p><strong>Fecha actual:</strong> <span id="factual"></span></p>
+    <p><strong>Fecha de cita:</strong> <span id="fcita"></span></p>
+    <p><strong>Enfermedades crónicas:</strong> <span id="cronicas"></span></p>
+    <p><strong>¿Cuáles?:</strong> <span id="enfermedades"></span></p>
+    <p><strong>Costo:</strong> <span id="costo"></span></p>
+    <div class="line"></div>
+    <p style="text-align:center;">Gracias por su visita</p>
+    <div class="line"></div>
+    <button class="btn-print" onclick="window.print()">🖨️ Imprimir Ticket</button>
+  </div>
+
+  <script>
+    // Simula recibir datos del backend o localStorage
+    const ticket = JSON.parse(localStorage.getItem("ticket"));
+
+    if (ticket) {
+      document.getElementById("paciente").textContent = ticket.nombre;
+      document.getElementById("edad").textContent = ticket.edad;
+      document.getElementById("factual").textContent = ticket.fechaActual;
+      document.getElementById("fcita").textContent = ticket.fechaCita;
+      document.getElementById("cronicas").textContent = ticket.cronicas;
+      document.getElementById("enfermedades").textContent = ticket.enfermedades || "Ninguna";
+      document.getElementById("costo").textContent = ticket.costo;
+    } else {
+      document.getElementById("ticket").innerHTML = "<p>No hay información del ticket disponible.</p>";
+    }
+  </script>
+</body>
+</html>
