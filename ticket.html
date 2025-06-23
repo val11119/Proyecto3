@@ -67,20 +67,51 @@
   </div>
 
   <script>
-    // Simula recibir datos del backend o localStorage
-    const ticket = JSON.parse(localStorage.getItem("ticket"));
+  const ticket = JSON.parse(localStorage.getItem("ticket"));
+  const registros = JSON.parse(localStorage.getItem("registros")) || [];
 
-    if (ticket) {
-      document.getElementById("paciente").textContent = ticket.nombre;
-      document.getElementById("edad").textContent = ticket.edad;
-      document.getElementById("factual").textContent = ticket.fechaActual;
-      document.getElementById("fcita").textContent = ticket.fechaCita;
-      document.getElementById("cronicas").textContent = ticket.cronicas;
-      document.getElementById("enfermedades").textContent = ticket.enfermedades || "Ninguna";
-      document.getElementById("costo").textContent = ticket.costo;
-    } else {
-      document.getElementById("ticket").innerHTML = "<p>No hay información del ticket disponible.</p>";
-    }
-  </script>
+  if (ticket) {
+
+    const [anio, mes] = ticket.fechaCita.split("-");
+
+   
+    const citasMismoMes = registros.filter(r => {
+      const [a, m] = r.fechaCita.split("-");
+      return a === anio && m === mes && r.nombre === ticket.nombre;
+    }).length;
+
+    
+    let descuento = 0;
+    if (citasMismoMes === 2) descuento = 0.10;
+    else if (citasMismoMes >= 3) descuento = 0.20;
+
+    const subtotal = 500;
+    const descuentoAplicado = subtotal * descuento;
+    const total = subtotal - descuentoAplicado;
+
+    
+    document.getElementById("ticket").innerHTML = `
+      <h2>Clínica Médica</h2>
+      <div class="line"></div>
+      <p><strong>Paciente:</strong> ${ticket.nombre}</p>
+      <p><strong>Edad:</strong> ${ticket.edad}</p>
+      <p><strong>Fecha actual:</strong> ${ticket.fechaActual}</p>
+      <p><strong>Fecha de cita:</strong> ${ticket.fechaCita}</p>
+      <p><strong>Enfermedades crónicas:</strong> ${ticket.cronicas}</p>
+      <p><strong>¿Cuáles?:</strong> ${ticket.enfermedades || "Ninguna"}</p>
+      <div class="line"></div>
+      <p><strong>Subtotal:</strong> $${subtotal}</p>
+      <p><strong>Descuento (${descuento * 100}%):</strong> -$${descuentoAplicado.toFixed(2)}</p>
+      <p><strong>Total a pagar:</strong> $${total.toFixed(2)}</p>
+      <div class="line"></div>
+      <p style="text-align:center;">Gracias por su preferencia 💙</p>
+      <div class="line"></div>
+      <button class="btn-print" onclick="window.print()">🖨️ Imprimir Ticket</button>
+    `;
+  } else {
+    document.getElementById("ticket").innerHTML = "<p>No hay información del ticket disponible.</p>";
+  }
+</script>
+
 </body>
 </html>
